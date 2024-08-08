@@ -1,19 +1,30 @@
 package ru.spring.project2.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.util.List;
+
+@Entity
+@Table(name = "person")
 public class Person {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "fullname")
     @NotEmpty(message = "ФИО должно быть заполнено")
     private String fullName;
 
+    @Column(name = "yearbirth")
     @Min(value = 1900, message = "Год рождения должен быть больше 1900")
     private int yearBirth;
 
-    //private List<Book> books;
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
+
 
     public Person() {
     }
@@ -21,8 +32,8 @@ public class Person {
     public Person(String fullName, int yearBirth) {
         this.fullName = fullName;
         this.yearBirth = yearBirth;
-        //this.books = books;
     }
+
 
     public int getId() {
         return id;
@@ -48,4 +59,20 @@ public class Person {
         this.yearBirth = yearBirth;
     }
 
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", yearBirth=" + yearBirth +
+                '}';
+    }
 }
