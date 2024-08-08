@@ -1,0 +1,13 @@
+CREATE TABLE person(
+  id serial PRIMARY KEY,
+  fullname varchar(100) NOT NULL UNIQUE,
+  yearbirth int NOT NULL CHECK (yearbirth > 0)
+);
+
+CREATE TABLE book (
+  id serial PRIMARY KEY,
+  person_id int REFERENCES person(id) ON DELETE SET NULL,
+  name varchar(100) NOT NULL,
+  author varchar(100) NOT NULL,
+  year int CHECK (year > 0) NOT NULL
+);
