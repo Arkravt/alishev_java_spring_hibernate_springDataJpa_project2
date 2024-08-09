@@ -2,6 +2,7 @@ package ru.spring.project2.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,8 +31,16 @@ public class BookController {
 
 
     @GetMapping()
-    public String books(Model model) {
-        model.addAttribute("books", booksService.findAll());
+    public String books(@RequestParam(name = "page", required = false) Integer page,
+                        @RequestParam(name = "books_per_page", required = false) Integer itemsPerPage,
+                        @RequestParam(name = "sort_by_year", required = false) boolean sortByYear,
+                        Model model) {
+
+        if (page == null || itemsPerPage == null)
+            model.addAttribute("books", booksService.findAll(sortByYear));
+        else
+            model.addAttribute("books", booksService.findAll(page, itemsPerPage, sortByYear));
+
         return "book/index";
     }
 
@@ -99,6 +108,17 @@ public class BookController {
     public String delete(@PathVariable("id") int id) {
         booksService.delete(id);
         return "redirect:/books";
+    }
+
+    @GetMapping("/search")
+    public String search() {
+        return "book/search";
+    }
+
+    @PostMapping("/search")
+    public String search(@RequestParam(value = "starting_with", required = false) String startingWith, Model model) {
+        model.addAttribute("books", booksService.findByNameStartingWith(startingWith));
+        return "book/search";
     }
 
 }
