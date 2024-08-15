@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.util.Calendar;
+import java.util.Date;
+
 @Entity
 @Table(name = "book")
 public class Book {
@@ -23,6 +26,14 @@ public class Book {
     @Column(name = "year")
     @Min(value = 1500, message = "Год должен быть больше 1500")
     private int year;
+
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takenAt;
+
+    @Transient
+    private boolean delay;
+
 
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
@@ -78,6 +89,31 @@ public class Book {
 
     public void setOwner(Person owner) {
         this.owner = owner;
+    }
+
+    public Date getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(Date takenAt) {
+        this.takenAt = takenAt;
+    }
+
+    public boolean isDelay() {
+
+        Calendar calendar;
+
+        if (this.getTakenAt() == null)
+            return false;
+        else {
+            calendar = Calendar.getInstance();
+            calendar.add(Calendar.DATE, -10);
+            return this.takenAt.before(calendar.getTime());
+        }
+    }
+
+    public void setDelay(boolean delay) {
+        this.delay = delay;
     }
 
     @Override

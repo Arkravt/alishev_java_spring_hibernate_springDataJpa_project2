@@ -36,10 +36,17 @@ public class BookController {
                         @RequestParam(name = "sort_by_year", required = false) boolean sortByYear,
                         Model model) {
 
+        if (page != null)
+            page--;
+
         if (page == null || itemsPerPage == null)
             model.addAttribute("books", booksService.findAll(sortByYear));
         else
             model.addAttribute("books", booksService.findAll(page, itemsPerPage, sortByYear));
+
+        model.addAttribute("page", page);
+        model.addAttribute("books_per_page", itemsPerPage);
+        model.addAttribute("sort_by_year", sortByYear);
 
         return "book/index";
     }

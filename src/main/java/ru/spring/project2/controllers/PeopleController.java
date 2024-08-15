@@ -7,9 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.spring.project2.dao.PersonDao;
+import ru.spring.project2.models.Book;
 import ru.spring.project2.models.Person;
 import ru.spring.project2.service.PeopleService;
 import ru.spring.project2.utils.PersonValidator;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/people")
@@ -70,10 +73,12 @@ public class PeopleController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        Person person = peopleService.getPersonWithBooks(id);
-        model.addAttribute("person", person);
-        model.addAttribute("books", person.getBooks());
+//        Person person = peopleService.getBooksByPersonId(id);
+//        model.addAttribute("person", person);
+//        model.addAttribute("books", person.getBooks());
 
+        model.addAttribute("person", peopleService.findOne(id));
+        model.addAttribute("books", peopleService.getBooksByPersonId(id));
         return "people/show";
     }
 

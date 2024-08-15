@@ -10,6 +10,7 @@ import ru.spring.project2.models.Person;
 import ru.spring.project2.repositories.BooksRepository;
 import ru.spring.project2.repositories.PeopleRepository;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -57,12 +58,14 @@ public class BooksService {
         Book book = booksRepository.findById(id).get();
         Person person = peopleService.findOne(personId);
         book.setOwner(person);
+        book.setTakenAt(new Date());
     }
 
     @Transactional
     public void release(int id) {
         Book book = booksRepository.findById(id).get();
         book.setOwner(null);
+        book.setTakenAt(null);
     }
 
     @Transactional

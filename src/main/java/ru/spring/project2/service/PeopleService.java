@@ -8,6 +8,7 @@ import ru.spring.project2.models.Person;
 import ru.spring.project2.repositories.PeopleRepository;
 import org.hibernate.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,14 +49,26 @@ public class PeopleService {
         peopleRepository.deleteById(id);
     }
 
-    public Person getPersonWithBooks(int id) {
-        Person person = peopleRepository.findById(id).get();
-        Hibernate.initialize(person.getBooks());
-        return person;
+//    public Person getPersonWithBooks(int id) {
+//        Person person = peopleRepository.findById(id).get();
+//        Hibernate.initialize(person.getBooks());
+//        return person;
+//    }
+
+    public List<Book> getBooksByPersonId(int id) {
+
+        Optional<Person> person = peopleRepository.findById(id);
+
+        if(person.isPresent()) {
+            Hibernate.initialize(person.get().getBooks());
+            return person.get().getBooks();
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public Optional<Person> findByFullNameAndIdNot(String fullName, int id) {
-        return Optional.of(peopleRepository.findByFullNameAndIdNot(fullName, id)).stream().findAny();
+        return Optional.ofNullable(peopleRepository.findByFullNameAndIdNot(fullName, id)).stream().findAny();
     }
 
 }

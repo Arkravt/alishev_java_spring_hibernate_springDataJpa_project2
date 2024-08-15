@@ -11,3 +11,10 @@ CREATE TABLE book (
   author varchar(100) NOT NULL,
   year int CHECK (year > 0) NOT NULL
 );
+
+
+ALTER TABLE Book ADD COLUMN taken_at TIMESTAMP;
+
+UPDATE book
+SET taken_at = '2024-08-03 09:00:00'::timestamp
+WHERE id = 7;
